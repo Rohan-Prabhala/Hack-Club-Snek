@@ -10,12 +10,13 @@
 import pygame
 import random
 
+from InputHandler import InputHandler
+
 pygame.init()
 window = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Snake Gobble Game")
 
 player = pygame.surface.Surface((300, 300))
-player.fill((255, 255, 255))
 player = pygame.image.load("imgs/New Piskel-1.png.png").convert_alpha()
 player = pygame.transform.scale(player, (100, 100))
 
@@ -51,9 +52,14 @@ delta_time = 0.1
 
 font = pygame.font.SysFont("Arial", 36)
 
+input = InputHandler()
+
 while running:
     # take input
-    
+    input.Update()
+
+    player_vel_x = input.input_vector_normalized.x  * 200
+    player_vel_y = input.input_vector_normalized.y  * 200
 
     if collision_detection():
         falling_object_y = 0
@@ -78,7 +84,7 @@ while running:
 
     if game_state == 1:
         player_x += player_vel_x * delta_time
-        player_vel_y += player_vel_y * delta_time
+        player_y += player_vel_y * delta_time
         window.blit(player, (player_x, player_y))
 
         falling_object_x += falling_object_vel_x * delta_time
