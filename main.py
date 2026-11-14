@@ -1,7 +1,9 @@
 # quick intro: https://www.youtube.com/watch?v=blLLtdv4tvo&t=108s
 # repo example: https://github.com/PythonProgramming/pygame-tutorial-series
 # primer: https://realpython.com/pygame-a-primer/
-# random beginners guide: https://www.youtube.com/watch?v=_BIAu6396-A&t=229s
+# + the docs and tutorials there
+
+# game thats like snake but you have to gobble up enemies who actively try to either run or fight you + it has a bigger open world
 
 import pygame
 import random
