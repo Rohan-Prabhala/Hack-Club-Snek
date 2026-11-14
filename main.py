@@ -5,17 +5,19 @@
 
 # game thats like snake but you have to gobble up enemies who actively try to either run or fight you + it has a bigger open world
 
+# IM GONNA MAKE SURE MY GAME IS STRUCTURED PROPERLY OKAY?? I have some very minor java experience and unity experience so that should help fr
+
 import pygame
 import random
 
 pygame.init()
 window = pygame.display.set_mode((800, 600))
-pygame.display.set_caption("wasd")
+pygame.display.set_caption("Snake Gobble Game")
 
 player = pygame.surface.Surface((300, 300))
 player.fill((255, 255, 255))
 player = pygame.image.load("imgs/New Piskel-1.png.png").convert_alpha()
-player = pygame.transform.scale(player, (300, 300))
+player = pygame.transform.scale(player, (100, 100))
 
 player_x = 0
 player_y = 0
@@ -51,18 +53,7 @@ font = pygame.font.SysFont("Arial", 36)
 
 while running:
     # take input
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                player_vel_x = -200
-            if event.key == pygame.K_RIGHT:
-                player_vel_x = 200
-        else:
-            player_vel_x = 0
-            player_vel_y = 0
+    
 
     if collision_detection():
         falling_object_y = 0
