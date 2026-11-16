@@ -6,23 +6,30 @@ import pygame
 
 import Helper
 
-class CameraGroup(pygame.sprite.Group):
-    def __init__(self, *sprites):
-        super().__init__(*sprites)
+from Player import Player
 
+class CameraGroup(pygame.sprite.Group):
+    def __init__(self, screen, *sprites):
+        super().__init__(*sprites)
+        
+        self.screen = screen
         # camera offset
         self.offset = pygame.math.Vector2(0, 0)
 
         # ground
-        # self.ground_surface = Helper.load_image("", "", 2, 2)
-        # self.ground_rect = self.ground_surface.get_rect(topleft = (0, 0))
+        self.ground_surface = Helper.load_image("imgs", "background_TEST.png", 0, 0)
+        self.ground_rect = self.ground_surface.get_rect(center = (320, 180))
 
-    def custom_draw(self, screen):
+    def custom_draw(self, offset: pygame.Vector2):
+        self.offset = offset
+
         #  ground
-        # ground_offset = self.ground_rect.topleft + self.offset
-        # screen.blit(self.ground_surface, self.ground_rect)
+        ground_offset = self.ground_rect.topleft - self.offset
+        self.screen.blit(self.ground_surface, ground_offset)
 
         #  active elements
         for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
-            offset_pos = sprite.rect.topleft + self.offset
-            screen.blit(sprite.image, offset_pos)
+            new_pos = sprite.rect.topleft
+            if not sprite == Player:
+                new_pos -= self.offset
+            self.screen.blit(sprite.image, new_pos)

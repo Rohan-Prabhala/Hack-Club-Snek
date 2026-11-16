@@ -49,7 +49,7 @@ falling_object = Entity(
     gs,
     falling_object_hitbox,
     position = pygame.Vector2(random.randint(math.ceil(gs.rect.width), math.ceil(window.width-gs.rect.width)), 0),
-    initial_velocity = pygame.Vector2(0, 100),
+    initial_velocity = pygame.Vector2(0,0),
     collision_type=Collision_Type.GHOST
 )
 
@@ -95,10 +95,14 @@ for e in entities:
         blockable_sprites.add(e.sprite)
 
 camera_group = CameraGroup(
+    window, 
     *blockable_sprites.sprites(),
     *ghost_sprites.sprites(),
     player.sprite
 )
+
+half_w = window.get_size()[0] / 2 
+half_h = window.get_size()[1] / 2 
 
 while running:
     delta_time = clock.tick(60) / 1000
@@ -136,14 +140,19 @@ while running:
         text_rect = text_surface.get_rect(center=(400,300))
         window.blit(text_surface, text_rect)
 
+
+    player_offset = pygame.Vector2(0, 0)    
+    player_offset.x = player.position.x - half_w
+    player_offset.y = player.position.y - half_h
+
     # update visuals
     camera_group.update()
 
     # render the stuff yk
-    camera_group.custom_draw(window)
+    camera_group.custom_draw(player_offset)
 
     if debug:
         for e in entities:
-            e.draw_debug(window)
+            e.draw_debug(window, player_offset)
 
     pygame.display.flip()

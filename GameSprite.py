@@ -18,7 +18,7 @@ class GameSprite(pygame.sprite.Sprite):
             self.image = Helper.load_image(folder_name, image_name, width, height)
         else:
             self.image = pygame.Surface((width, height))
-            self.image.fill((255, 255, 255))
+            self.image.fill((0, 0, 0))
 
         self.rect: pygame.FRect = self.image.get_frect()
 
