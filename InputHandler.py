@@ -1,7 +1,9 @@
 import pygame
 
 class InputHandler:
-    def __init__(self) -> None:
+    def __init__(self, window) -> None:
+        self.window = window
+
         self.input_vector_normalized = pygame.Vector2(0,0)
         self.space_pressed = False
         self.shift_pressed = False
@@ -35,12 +37,6 @@ class InputHandler:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.space_pressed = True
-                elif event.key == pygame.WINDOWMAXIMIZED:
-                    self.is_max = True
-                elif event.type == pygame.WINDOWRESTORED:
-                    self.is_max = False
-                elif event.type == pygame.WINDOWRESIZED and not self.is_max:
-                     
             else:
                 pass
 

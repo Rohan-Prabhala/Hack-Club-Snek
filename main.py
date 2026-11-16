@@ -14,6 +14,8 @@ import pygame
 import random
 import math
 
+from pygame import Window
+
 from CameraGroup import CameraGroup
 
 from InputHandler import InputHandler
@@ -23,13 +25,18 @@ from Entity import Entity, Collision_Type
 
 from Player import Player
 
-GAME_WIDTH = 640
-GAME_HEIGHT = 360 
+GAME_WIDTH, GAME_HEIGHT = 640, 360
+SCALE_FACTOR = 3
 
 pygame.init()
-window = pygame.display.set_mode((640, 360), pygame.SCALED | pygame.RESIZABLE) # AI helped me for this weird line because wtf even is a bit operator and or and xor is all ik (actually this is in unity too with collider restraints)
-pygame.display.set_caption("Snake Gobble Game")
+window = pygame.Window("Snake Game", (GAME_WIDTH, GAME_HEIGHT) * SCALE_FACTOR, )
+screen = pygame.display.set_mode(), pygame.SCALED) # AI helped me for this weird line because wtf even is a bit operator and or and xor is all ik (actually this is in unity too with collider restraints)
+window = pygame.Window.get_surface()
+window.maximize()
+
 # pygame.display.set_icon()
+
+assert window is not None
 
 player = Player(
     GameSprite("imgs", "New Piskel-1.png", 100, 100),
@@ -73,7 +80,7 @@ delta_time = 0.1
 
 font = pygame.font.SysFont("Arial", 36)
 
-input = InputHandler()
+input = InputHandler(window)
 
 entities = [
     player,
