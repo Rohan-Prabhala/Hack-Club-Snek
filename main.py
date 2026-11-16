@@ -8,31 +8,41 @@
 
 # IM GONNA MAKE SURE MY GAME IS STRUCTURED PROPERLY OKAY?? I have some very minor java experience and unity experience so that should help fr
 
+# IDK WHAT THIS MEANS BUT IM GONNA MAKE EVERYTHING 32 x 32 pixels NO clue how this will work for the background but yk... whatever
+
 import pygame
 import random
 import math
 
+from CameraGroup import CameraGroup
+
 from InputHandler import InputHandler
+
 from GameSprite import GameSprite
 from Entity import Entity, Collision_Type
 
 from Player import Player
 
-pygame.init()
-window = pygame.display.set_mode((800, 600))
-pygame.display.set_caption("Snake Gobble Game")
+GAME_WIDTH = 640
+GAME_HEIGHT = 360 
 
-player_hitbox = pygame.FRect()
-player_hitbox.width, player_hitbox.height = 80, 80
-player_hitbox.center = (100, 100)
-player = Player(GameSprite("imgs/New Piskel-1.png.png", 100, 100), player_hitbox, pygame.Vector2(100, 100))
+pygame.init()
+window = pygame.display.set_mode((640, 360), pygame.SCALED | pygame.RESIZABLE) # AI helped me for this weird line because wtf even is a bit operator and or and xor is all ik (actually this is in unity too with collider restraints)
+pygame.display.set_caption("Snake Gobble Game")
+# pygame.display.set_icon()
+
+player = Player(
+    GameSprite("imgs", "New Piskel-1.png", 100, 100),
+    pygame.FRect(100, 100, 80, 80),
+    pygame.Vector2(100, 100)
+)
 
 assert player.sprite is not None
 
-gs = GameSprite(None, 50, 50)
-
+gs = GameSprite(None, None, 50, 50)
 falling_object_hitbox = gs.rect.inflate(-10, -10)
 falling_object_hitbox.center = (100, 100)
+
 falling_object = Entity(
     gs,
     falling_object_hitbox,
@@ -41,14 +51,24 @@ falling_object = Entity(
     collision_type=Collision_Type.GHOST
 )
 
+gs2 = GameSprite(None, None, 50, 50)
+hb = gs2.rect.inflate(-10, -10)
+hb.center = (100, 100)
+
+obj = Entity(
+    gs2,
+    hb,
+    position = pygame.Vector2(500, 500),
+    initial_velocity = pygame.Vector2(0, 0),
+    collision_type=Collision_Type.GHOST
+)
+
 debug = True
 
+running = True
 game_state = 1
 
-running = True
-
 clock = pygame.time.Clock()
-
 delta_time = 0.1
 
 font = pygame.font.SysFont("Arial", 36)
@@ -57,13 +77,12 @@ input = InputHandler()
 
 entities = [
     player,
-    falling_object
+    falling_object,
+    obj
 ]
 
 blockable_sprites = pygame.sprite.Group()
 ghost_sprites = pygame.sprite.Group() # i made this name up - its just for sprites that the player can pass through
-
-all_sprites = pygame.sprite.Group(blockable_sprites, ghost_sprites, player.sprite)
 
 for e in entities:
     if e.sprite is None or isinstance(e, Player):
@@ -72,6 +91,12 @@ for e in entities:
         ghost_sprites.add(e.sprite)
     elif e.collision_type == Collision_Type.BLOCKABLE:
         blockable_sprites.add(e.sprite)
+
+camera_group = CameraGroup(
+    *blockable_sprites.sprites(),
+    *ghost_sprites.sprites(),
+    player.sprite
+)
 
 while running:
     delta_time = clock.tick(60) / 1000
@@ -90,10 +115,10 @@ while running:
     blockable_hits = pygame.sprite.spritecollide(player.sprite, blockable_sprites, dokill=False)
 
     for e in ghost_hits:
-        if e.
-        falling_object.set_position(pygame.Vector2(random.randint(math.ceil(gs.rect.width), math.ceil(window.width-gs.rect.width)), 0))
+        if e == falling_object.sprite:
+            falling_object.set_position(pygame.Vector2(random.randint(math.ceil(gs.rect.width), math.ceil(window.width-gs.rect.width)), 0))
 
-    if falling_object.current_velocity.y >= 600:
+    if falling_object.position.y >= 600:
         player.current_velocity = pygame.Vector2(0, 0)
         player.set_position(pygame.Vector2(1000, 1000))
 
@@ -102,7 +127,7 @@ while running:
 
         game_state = 2
 
-    window.fill((255, 255, 255))
+    window.fill((0, 255, 0))
 
     if game_state == 2:
         text_surface = font.render('GAME OVER', True, (0, 0, 0))
@@ -110,10 +135,10 @@ while running:
         window.blit(text_surface, text_rect)
 
     # update visuals
-    all_sprites.update()
+    camera_group.update()
 
     # render the stuff yk
-    all_sprites.draw(window)
+    camera_group.custom_draw(window)
 
     if debug:
         for e in entities:

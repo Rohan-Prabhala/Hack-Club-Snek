@@ -8,14 +8,17 @@ import Helper
 
 class GameSprite(pygame.sprite.Sprite):
 
-    def __init__(self, image_name: Optional[str], width: float, height: float):
+    def __init__(self, folder_name: Optional[str], image_name: Optional[str], width: float, height: float):
         super().__init__()
 
-        if not image_name == None:
-            self.image = Helper.load_image(image_name, width, height)
+        if (folder_name is None) ^ (image_name is None):
+            raise ValueError("Folder name and image name need to either BOTH be assigned or BOTH be None! You can't have an image without a folder and vice versa!")
+
+        if not image_name is None and not folder_name is None:
+            self.image = Helper.load_image(folder_name, image_name, width, height)
         else:
             self.image = pygame.Surface((width, height))
-            self.image.fill((0, 0, 0))
+            self.image.fill((255, 255, 255))
 
         self.rect: pygame.FRect = self.image.get_frect()
 
