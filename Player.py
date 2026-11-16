@@ -5,11 +5,11 @@ from typing import Optional
 from InputHandler import InputHandler
 
 from GameSprite import GameSprite 
-from Entity import Entity
+from Entity import Entity, Collision_Type
 
 class Player(Entity):
     def __init__(self, sprite: GameSprite | None, hitbox: pygame.FRect | None, position: pygame.math.Vector2):
-        super().__init__(sprite, hitbox, position, pygame.Vector2(0.0, 0.0))
+        super().__init__(sprite, hitbox, position, pygame.Vector2(0.0, 0.0), Collision_Type.PLAYER)
 
         self.walk_speed = 200
         self.run_speed = 300
@@ -24,3 +24,9 @@ class Player(Entity):
 
     def update(self, delta_time):
         super().update(delta_time)
+
+    def on_collision_with(self, other: Entity):
+        super().on_collision_with(other)
+
+    def on_collision(self):
+        return super().on_collision()

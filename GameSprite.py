@@ -22,5 +22,5 @@ class GameSprite(pygame.sprite.Sprite):
     def set_position(self, position: pygame.math.Vector2):
         self.rect.center = (position.x, position.y)
 
-    def move(self, distance: pygame.math.Vector2):
-        self.pos = self.pos.move(distance.x, distance.y)
+    # def move(self, distance: pygame.math.Vector2):
+    #     self.pos = self.pos.move(distance.x, distance.y)
