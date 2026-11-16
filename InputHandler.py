@@ -4,22 +4,27 @@ class InputHandler:
     def __init__(self) -> None:
         self.input_vector_normalized = pygame.Vector2(0,0)
         self.space_pressed = False
+        self.shift_pressed = False
     
-    def Update(self):
+    def update(self):
         keys = pygame.key.get_pressed() # https://www.pygame.org/docs/ref/key.html#pygame.key.get_pressed
 
         self.input_vector_normalized = pygame.Vector2(0,0)
+        self.space_pressed = False
 
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.input_vector_normalized += pygame.Vector2(-1, 0)
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.input_vector_normalized += pygame.Vector2(1, 0)
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
                 self.input_vector_normalized += pygame.Vector2(0, 1)
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_UP] or keys[pygame.K_w]:
                 self.input_vector_normalized += pygame.Vector2(0, -1)
 
-        self.input_vector_normalized.normalize # what i learned from unity 
+        self.shift_pressed = keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]
+
+        if self.input_vector_normalized.length() > 0:
+            self.input_vector_normalized.normalize_ip() # what i learned from unity
          
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -1,6 +1,7 @@
 # quick intro: https://www.youtube.com/watch?v=blLLtdv4tvo&t=108s
 # repo example: https://github.com/PythonProgramming/pygame-tutorial-series
 # primer: https://realpython.com/pygame-a-primer/
+# camera: https://www.youtube.com/watch?v=u7LPRqrzry8
 # + the docs and tutorials there
 
 # game thats like snake but you have to gobble up enemies who actively try to either run or fight you + it has a bigger open world
@@ -11,36 +12,32 @@ import pygame
 import random
 
 from InputHandler import InputHandler
+from GameSprite import GameSprite
+from Entity import Entity
+
+from Player import Player
 
 pygame.init()
 window = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Snake Gobble Game")
 
-player = pygame.surface.Surface((300, 300))
-player = pygame.image.load("imgs/New Piskel-1.png.png").convert_alpha()
-player = pygame.transform.scale(player, (100, 100))
+player_hitbox = pygame.FRect()
+player_hitbox.width, player_hitbox.height = 80, 80
+player_hitbox.center = (100, 100)
+player = Player(GameSprite("imgs/New Piskel-1.png.png", 100, 100), player_hitbox, pygame.Vector2(100, 100))
 
-player_x = 0
-player_y = 0
+gs = GameSprite(None, 50, 50)
 
-player_vel_x = 0
-player_vel_y = 0
+falling_object_hitbox = gs.rect.inflate(-10, -10)
+falling_object_hitbox.center = (100, 100)
+falling_object = Entity(
+    gs,
+    falling_object_hitbox,
+    position = pygame.Vector2(random.randint(50, window.width-50), 0),
+    initial_velocity = pygame.Vector2(0, 100)
+)
 
-falling_object = pygame.surface.Surface((50, 50))
-falling_object.fill((0, 0, 0))
-
-falling_object_x = 0
-falling_object_y = 0
-
-falling_object_vel_x = 0
-falling_object_vel_y = 100
-
-def collision_detection():
-    return (player_x <= (falling_object_x + int (falling_object.width)) and
-            (player_x + player.width) >= falling_object_x and
-            player_y <= (falling_object_y + falling_object.height + 5) and
-            (player_y + player.height) >= falling_object_y
-    )
+debug = True
 
 game_state = 1
 
@@ -54,27 +51,45 @@ font = pygame.font.SysFont("Arial", 36)
 
 input = InputHandler()
 
+entities = [
+    player,
+    falling_object
+]
+
+all_sprites = pygame.sprite.Group()
+
+for e in entities:
+    if e.sprite is not None:
+        all_sprites.add(e.sprite)
+
 while running:
+    delta_time = clock.tick(60) / 1000
+    delta_time = max(0.001, min(0.1, delta_time)) # some weird tutorial told me to do this
+
     # take input
-    input.Update()
+    input.update()
 
-    player_vel_x = input.input_vector_normalized.x  * 200
-    player_vel_y = input.input_vector_normalized.y  * 200
+    player.update_input (input)
 
-    if collision_detection():
-        falling_object_y = 0
-        falling_object_x = random.randint(0, window.width-50)
+    if player.sprite is not None:
+        hits = pygame.sprite.spritecollide(player.sprite, all_sprites, dokill=False)
 
-    if falling_object_y >= 600:
-        player_x, player_y = 1000, 1000
-        player_vel_x, player_vel_y = 0, 0
+        for e in hits:
+            if isinstance(e, Entity) and not isinstance(e, Player):
+                falling_object_y = 0
+                falling_object_x = random.randint(0, window.width-50)
 
-        falling_object_x, falling_object_y = 1000, 1000
-        falling_object_vel_x, falling_object_vel_y = 0,0
+    if falling_object.current_velocity.y >= 600:
+        player.current_velocity = pygame.Vector2(0, 0)
+        player.position = pygame.Vector2(1000, 1000)
+
+        falling_object.current_velocity = pygame.Vector2(0, 0)
+        falling_object.position = pygame.Vector2(1000, 1000)
 
         game_state = 2
 
-    # output
+    # update entities
+
     window.fill((255, 255, 255))
 
     if game_state == 2:
@@ -83,18 +98,19 @@ while running:
         window.blit(text_surface, text_rect)
 
     if game_state == 1:
-        player_x += player_vel_x * delta_time
-        player_y += player_vel_y * delta_time
-        window.blit(player, (player_x, player_y))
-
-        falling_object_x += falling_object_vel_x * delta_time
-        falling_object_y += falling_object_vel_y * delta_time
-        window.blit(falling_object, (falling_object_x, falling_object_y))
-
+        for e in entities:
+            e.update(delta_time)
     elif game_state == 2:
         pass
 
-    pygame.display.flip()
+    # update visuals
+    all_sprites.update()
 
-    delta_time = clock.tick(60) / 1000
-    delta_time = max(0.001, min(0.1, delta_time))
+    # render the stuff yk
+    all_sprites.draw(window)
+
+    if debug:
+        for e in entities:
+            e.draw_debug(window)
+
+    pygame.display.flip()
