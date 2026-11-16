@@ -149,7 +149,7 @@ while running:
     camera_group.update()
 
     # render the stuff yk
-    camera_group.custom_draw(player_offset)
+    camera_group.custom_draw(player_offset, player, debug)
 
     if debug:
         for e in entities:
