@@ -28,8 +28,7 @@ class Entity ():
         elif sprite is not None:
             self.hitbox = sprite.rect.copy()
 
-        self.position = position
-        self.update_sprite()
+        self.set_position(position)
 
     def set_position(self, new_position: pygame.Vector2):
         self.position = new_position
@@ -52,10 +51,14 @@ class Entity ():
 
     # to draw the hitbox and the visual thingy of the surface
     def draw_debug(self, window: pygame.Surface, offset: pygame.Vector2):
-        pygame.draw.rect(window, (255, 0, 0), self.hitbox.move(-offset), 1)
+        new_box = self.hitbox.move(-offset)
+        new_box.center = (round(new_box.center[0]), round(new_box.center[1]))
+        pygame.draw.rect(window, (255, 0, 0), new_box, 1)
 
         if self.sprite is not None:
-            pygame.draw.rect(window, (255, 255, 0), self.sprite.rect.move(-offset), 1)
+            new_box2 = self.sprite.rect.move(-offset)
+            new_box2.center = (round(new_box2.center[0]), round(new_box2.center[1]))
+            pygame.draw.rect(window, (255, 255, 0), new_box2, 1)
 
     
 

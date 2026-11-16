@@ -11,8 +11,8 @@ class Player(Entity):
     def __init__(self, sprite: GameSprite | None, hitbox: pygame.FRect | None, position: pygame.math.Vector2):
         super().__init__(sprite, hitbox, position, pygame.Vector2(0.0, 0.0), Collision_Type.PLAYER)
 
-        self.walk_speed = 200
-        self.run_speed = 300
+        self.walk_speed = 192
+        self.run_speed = 288
         self.input_vector_normalized = pygame.math.Vector2(0.0, 0.0)
 
     def update_input(self, input_handler: InputHandler):

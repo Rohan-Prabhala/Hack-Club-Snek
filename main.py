@@ -95,14 +95,14 @@ for e in entities:
         blockable_sprites.add(e.sprite)
 
 camera_group = CameraGroup(
-    window, 
     *blockable_sprites.sprites(),
     *ghost_sprites.sprites(),
-    player.sprite
+    player.sprite,
+    screen=window
 )
 
 half_w = window.get_size()[0] / 2 
-half_h = window.get_size()[1] / 2 
+half_h = window.get_size()[1] / 2
 
 while running:
     delta_time = clock.tick(60) / 1000
@@ -142,8 +142,8 @@ while running:
 
 
     player_offset = pygame.Vector2(0, 0)    
-    player_offset.x = player.position.x - half_w
-    player_offset.y = player.position.y - half_h
+    player_offset.x = round(player.position.x - half_w)
+    player_offset.y = round(player.position.y - half_h)
 
     # update visuals
     camera_group.update()
