@@ -26,7 +26,7 @@ class CameraGroup(pygame.sprite.Group):
         # self.camera_rect = pygame.Rect(l,t,w,h)
 
         # ground
-        self.ground_surface = Helper.load_image("imgs", "background_TEST.png", 0, 0)
+        self.ground_surface = Helper.load_image("imgs", "background.png", 0, 0)
         self.ground_rect = self.ground_surface.get_rect(center = (320, 180))
 
     def custom_draw(self, offset: pygame.Vector2, player: Player, draw_debug: bool):
