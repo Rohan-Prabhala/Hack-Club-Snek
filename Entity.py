@@ -52,10 +52,10 @@ class Entity ():
 
     # to draw the hitbox and the visual thingy of the surface
     def draw_debug(self, window: pygame.Surface):
-        pygame.draw.rect(window, (255, 0, 0), self.hitbox, 3)
+        pygame.draw.rect(window, (255, 0, 0), self.hitbox, 1)
 
         if self.sprite is not None:
-            pygame.draw.rect(window, (255, 255, 0), self.sprite.rect, 3)
+            pygame.draw.rect(window, (255, 255, 0), self.sprite.rect, 1)
 
     
 

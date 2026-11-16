@@ -14,8 +14,6 @@ import pygame
 import random
 import math
 
-from pygame import Window
-
 from CameraGroup import CameraGroup
 
 from InputHandler import InputHandler
@@ -25,29 +23,26 @@ from Entity import Entity, Collision_Type
 
 from Player import Player
 
-GAME_WIDTH, GAME_HEIGHT = 640, 360
-SCALE_FACTOR = 3
+PIXEL_UNIT_SIZE = 32
 
 pygame.init()
-window = pygame.Window("Snake Game", (GAME_WIDTH, GAME_HEIGHT) * SCALE_FACTOR, )
-screen = pygame.display.set_mode(), pygame.SCALED) # AI helped me for this weird line because wtf even is a bit operator and or and xor is all ik (actually this is in unity too with collider restraints)
-window = pygame.Window.get_surface()
-window.maximize()
+pygame.display.set_caption("Snake Gobble Game")
+window = pygame.display.set_mode((640, 360), pygame.SCALED) # AI helped me for this weird line because wtf even is a bit operator and or and xor is all ik (actually this is in unity too with collider restraints)
 
 # pygame.display.set_icon()
 
 assert window is not None
 
 player = Player(
-    GameSprite("imgs", "New Piskel-1.png", 100, 100),
-    pygame.FRect(100, 100, 80, 80),
+    GameSprite("imgs", "New Piskel-1.png", PIXEL_UNIT_SIZE, PIXEL_UNIT_SIZE),
+    pygame.FRect(100, 100, PIXEL_UNIT_SIZE-2, PIXEL_UNIT_SIZE-2),
     pygame.Vector2(100, 100)
 )
 
 assert player.sprite is not None
 
-gs = GameSprite(None, None, 50, 50)
-falling_object_hitbox = gs.rect.inflate(-10, -10)
+gs = GameSprite(None, None, PIXEL_UNIT_SIZE, PIXEL_UNIT_SIZE)
+falling_object_hitbox = gs.rect.inflate(-2, -2)
 falling_object_hitbox.center = (100, 100)
 
 falling_object = Entity(
@@ -58,14 +53,14 @@ falling_object = Entity(
     collision_type=Collision_Type.GHOST
 )
 
-gs2 = GameSprite(None, None, 50, 50)
+gs2 = GameSprite(None, None, PIXEL_UNIT_SIZE, PIXEL_UNIT_SIZE)
 hb = gs2.rect.inflate(-10, -10)
 hb.center = (100, 100)
 
 obj = Entity(
     gs2,
     hb,
-    position = pygame.Vector2(500, 500),
+    position = pygame.Vector2(200, 50),
     initial_velocity = pygame.Vector2(0, 0),
     collision_type=Collision_Type.GHOST
 )
@@ -134,7 +129,7 @@ while running:
 
         game_state = 2
 
-    window.fill((0, 255, 0))
+    window.fill((255, 255, 255))
 
     if game_state == 2:
         text_surface = font.render('GAME OVER', True, (0, 0, 0))
