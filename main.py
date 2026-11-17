@@ -4,6 +4,7 @@
 # camera: https://www.youtube.com/watch?v=u7LPRqrzry8
 # what i can do later: https://youtu.be/8OMghdHP-zs?t=18262
 # https://www.youtube.com/watch?v=MYaxPa_eZS0
+# https://www.pygame.org/docs/tut/ChimpLineByLine.html
 # + the docs and tutorials there
 
 # i didnt use some of these lmao
