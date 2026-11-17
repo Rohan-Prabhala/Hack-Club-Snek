@@ -2,7 +2,10 @@
 # repo example: https://github.com/PythonProgramming/pygame-tutorial-series
 # primer: https://realpython.com/pygame-a-primer/
 # camera: https://www.youtube.com/watch?v=u7LPRqrzry8
+# https://www.youtube.com/watch?v=8OMghdHP-zs
 # + the docs and tutorials there
+
+# i didnt use some of these lmao
 
 # game thats like snake but you have to gobble up enemies who actively try to either run or fight you + it has a bigger open world
 
