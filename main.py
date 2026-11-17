@@ -52,8 +52,8 @@ map_center = pygame.Vector2(
 
 player = Player(
     blockable_mask,
-    GameSprite("imgs", "New Piskel-1.png", width=PIXEL_UNIT_SIZE, height=PIXEL_UNIT_SIZE),
-    pygame.FRect(100, 100, PIXEL_UNIT_SIZE-2, PIXEL_UNIT_SIZE-2),
+    GameSprite("imgs", "sprites", "player", "bad_character_design.png", width=10, height=PIXEL_UNIT_SIZE, scale_factor=2),
+    pygame.FRect(100, 100, PIXEL_UNIT_SIZE-2, PIXEL_UNIT_SIZE*2-2),
     # pygame.Vector2(100, 100)
     map_center
 )
