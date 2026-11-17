@@ -14,6 +14,8 @@ import pygame
 import random
 import math
 
+import Helper
+
 from CameraGroup import CameraGroup
 
 from InputHandler import InputHandler
@@ -33,31 +35,44 @@ window = pygame.display.set_mode((640, 360), pygame.SCALED) # AI helped me for t
 
 assert window is not None
 
+background_color_map = Helper.load_image(Helper.get_path("imgs", "background", "Background_color_map.png"), 2)
+
+blockable_mask = pygame.mask.from_threshold(background_color_map, pygame.Color(255, 0, 0), pygame.Color(0, 0, 0, 255))
+
+map_center = pygame.Vector2(
+    background_color_map.get_width() / 2,
+    background_color_map.get_height() / 2
+)
+
 player = Player(
-    GameSprite("imgs", "New Piskel-1.png", PIXEL_UNIT_SIZE, PIXEL_UNIT_SIZE),
+    background_color_map,
+    GameSprite("imgs", "New Piskel-1.png", width=PIXEL_UNIT_SIZE, height=PIXEL_UNIT_SIZE),
     pygame.FRect(100, 100, PIXEL_UNIT_SIZE-2, PIXEL_UNIT_SIZE-2),
-    pygame.Vector2(100, 100)
+    # pygame.Vector2(100, 100)
+    map_center
 )
 
 assert player.sprite is not None
 
-gs = GameSprite(None, None, PIXEL_UNIT_SIZE, PIXEL_UNIT_SIZE)
+gs = GameSprite(width=PIXEL_UNIT_SIZE, height=PIXEL_UNIT_SIZE)
 falling_object_hitbox = gs.rect.inflate(-2, -2)
 falling_object_hitbox.center = (100, 100)
 
 falling_object = Entity(
+    background_color_map,
     gs,
     falling_object_hitbox,
-    position = pygame.Vector2(random.randint(math.ceil(gs.rect.width), math.ceil(window.width-gs.rect.width)), 0),
+    position = pygame.Vector2(random.randint(math.ceil(gs.rect.width), math.ceil(window.width-gs.rect.width)), 32),
     initial_velocity = pygame.Vector2(0,0),
     collision_type=Collision_Type.GHOST
 )
 
-gs2 = GameSprite(None, None, PIXEL_UNIT_SIZE, PIXEL_UNIT_SIZE)
+gs2 = GameSprite(width=PIXEL_UNIT_SIZE, height=PIXEL_UNIT_SIZE)
 hb = gs2.rect.inflate(-10, -10)
 hb.center = (100, 100)
 
 obj = Entity(
+    background_color_map,
     gs2,
     hb,
     position = pygame.Vector2(200, 50),
@@ -108,7 +123,8 @@ while running:
     delta_time = clock.tick(60) / 1000
     delta_time = max(0.001, min(0.1, delta_time)) # some weird tutorial told me to do this
 
-    input.update()
+    running = input.update()
+
     player.update_input(input)
 
     if game_state == 1:
@@ -156,3 +172,5 @@ while running:
             e.draw_debug(window, player_offset)
 
     pygame.display.flip()
+
+pygame.quit()

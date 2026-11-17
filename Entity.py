@@ -14,9 +14,11 @@ class Collision_Type(Enum):
 
 # Typing is very confusing but im trynna make it so that the sprite HAS to be game sprite or the entity doesnt need to have a sprite
 class Entity ():
-    def __init__(self, sprite: Optional[GameSprite], hitbox: Optional[pygame.FRect], position: pygame.math.Vector2, initial_velocity: pygame.Vector2, collision_type: Collision_Type):
+    def __init__(self, blockable_mask: pygame.mask.Mask, sprite: Optional[GameSprite], hitbox: Optional[pygame.FRect], position: pygame.math.Vector2, initial_velocity: pygame.Vector2, collision_type: Collision_Type):
         if sprite is None and hitbox is None:
             raise ValueError("This entity needs to at least have a sprite or rect passed into it!")
+
+        self.blockable_mask = blockable_mask
 
         self.collision_type = collision_type
         self.sprite = sprite
@@ -28,9 +30,29 @@ class Entity ():
         elif sprite is not None:
             self.hitbox = sprite.rect.copy()
 
+        self.hitbox_mask = pygame.mask.Mask((int(self.hitbox.width), int(self.hitbox.height)), fill = True)
+
+        self.position = pygame.Vector2(position)
+        self.hitbox.center = self.position
+
         self.set_position(position)
 
     def set_position(self, new_position: pygame.Vector2):
+        test_box = self.hitbox.copy()
+        test_box.center = new_position
+
+        map_w, map_h = self.blockable_mask.get_size()
+
+        if test_box.left < 0 or test_box.right > map_w or test_box.top < 0 or test_box.bottom > map_h:
+            return
+
+        offset = 
+            
+        if(new_position.x + offset.x <= 0 or new_position.y + offset.y <= 0): return
+
+        if(self.color_map.get_at(new_position + offset) == pygame.Color(255, 0, 0)):
+            return
+
         self.position = new_position
         self.hitbox.center = self.position
         self.update_sprite()

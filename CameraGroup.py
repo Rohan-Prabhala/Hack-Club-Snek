@@ -1,5 +1,7 @@
 # https://www.youtube.com/watch?v=u7LPRqrzry8
 
+# background image uses this reference: https://craftpix.net/freebies/free-undead-tileset-top-down-pixel-art/
+
 from typing import Any, Iterable
 
 import pygame
@@ -26,8 +28,8 @@ class CameraGroup(pygame.sprite.Group):
         # self.camera_rect = pygame.Rect(l,t,w,h)
 
         # ground
-        self.ground_surface = Helper.load_image("imgs", "background.png", 0, 0)
-        self.ground_rect = self.ground_surface.get_rect(center = (320, 180))
+        self.ground_surface = Helper.load_image(Helper.get_path("imgs", "background", "Background.png"), 2)
+        self.ground_rect = self.ground_surface.get_rect(topleft = (0, 0))
 
     def custom_draw(self, offset: pygame.Vector2, player: Player, draw_debug: bool):
         # box camera doesnt work!

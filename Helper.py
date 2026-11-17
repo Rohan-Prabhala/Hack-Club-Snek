@@ -2,10 +2,13 @@ import pygame
 
 import os
 
-def load_image(folder_name: str, image_name: str, width: float, height: float):
-    image = pygame.image.load(os.path.join(folder_name, image_name)).convert_alpha()
-    # image = pygame.transform.scale(image, (width, height))
+def load_image(path: str, scale_factor: int):
+    image = pygame.image.load(path).convert_alpha()
+    image = pygame.transform.scale(image, (image.width*scale_factor, image.height*scale_factor))
     return image
+
+def get_path(*paths: str) -> str:
+    return os.path.join(*paths)
 
 def load_sound(name: str):
     pass

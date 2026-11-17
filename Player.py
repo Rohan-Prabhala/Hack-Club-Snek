@@ -8,8 +8,8 @@ from GameSprite import GameSprite
 from Entity import Entity, Collision_Type
 
 class Player(Entity):
-    def __init__(self, sprite: GameSprite | None, hitbox: pygame.FRect | None, position: pygame.math.Vector2):
-        super().__init__(sprite, hitbox, position, pygame.Vector2(0.0, 0.0), Collision_Type.PLAYER)
+    def __init__(self, background_color_map: pygame.Surface, sprite: GameSprite | None, hitbox: pygame.FRect | None, position: pygame.math.Vector2):
+        super().__init__(background_color_map, sprite, hitbox, position, pygame.Vector2(0.0, 0.0), Collision_Type.PLAYER)
 
         self.walk_speed = 192
         self.run_speed = 288

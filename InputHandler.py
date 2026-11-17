@@ -10,7 +10,7 @@ class InputHandler:
 
         self.is_max = False
     
-    def update(self):
+    def update(self) -> bool:
         keys = pygame.key.get_pressed() # https://www.pygame.org/docs/ref/key.html#pygame.key.get_pressed
 
         self.input_vector_normalized = pygame.Vector2(0,0)
@@ -32,11 +32,12 @@ class InputHandler:
          
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-
+                return False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.space_pressed = True
             else:
                 pass
+
+        return True
 

@@ -8,14 +8,11 @@ import Helper
 
 class GameSprite(pygame.sprite.Sprite):
 
-    def __init__(self, folder_name: Optional[str], image_name: Optional[str], width: float, height: float):
+    def __init__(self, *paths: str, width: float, height: float):
         super().__init__()
 
-        if (folder_name is None) ^ (image_name is None):
-            raise ValueError("Folder name and image name need to either BOTH be assigned or BOTH be None! You can't have an image without a folder and vice versa!")
-
-        if not image_name is None and not folder_name is None:
-            self.image = Helper.load_image(folder_name, image_name, width, height)
+        if paths:
+            self.image = Helper.load_image(Helper.get_path(*paths), 1)
         else:
             self.image = pygame.Surface((width, height))
             self.image.fill((0, 0, 0))
