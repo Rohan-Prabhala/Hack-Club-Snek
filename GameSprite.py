@@ -8,11 +8,11 @@ import Helper
 
 class GameSprite(pygame.sprite.Sprite):
 
-    def __init__(self, *paths: str, width: float, height: float):
+    def __init__(self, *paths: str, width: float, height: float, scale_factor: int = 1):
         super().__init__()
 
         if paths:
-            self.image = Helper.load_image(Helper.get_path(*paths), 1)
+            self.image = Helper.load_image(Helper.get_path(*paths), scale_factor)
         else:
             self.image = pygame.Surface((width, height))
             self.image.fill((0, 0, 0))

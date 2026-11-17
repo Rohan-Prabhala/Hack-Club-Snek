@@ -49,7 +49,7 @@ class CameraGroup(pygame.sprite.Group):
         self.screen.blit(self.ground_surface, (round(ground_offset.x), round(ground_offset.y)))
 
         #  active elements
-        for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
+        for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.bottom):
             new_pos = sprite.rect.topleft
             # if not sprite == Player:
             new_pos -= self.offset

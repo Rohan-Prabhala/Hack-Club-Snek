@@ -27,17 +27,20 @@ from Player import Player
 
 PIXEL_UNIT_SIZE = 32
 
+tree_counts = {
+    "Trees-1.png": 10,
+    "Trees-2.png": 15,
+    "Trees-3.png": 5,
+}
+
 pygame.init()
 pygame.display.set_caption("Snake Gobble Game")
 window = pygame.display.set_mode((640, 360), pygame.SCALED) # AI helped me for this weird line because wtf even is a bit operator and or and xor is all ik (actually this is in unity too with collider restraints)
-
 # pygame.display.set_icon()
-
 assert window is not None
 
 background_color_map = Helper.load_image(Helper.get_path("imgs", "background", "Background_color_map.png"), 2)
-
-blockable_mask = pygame.mask.from_threshold(background_color_map, pygame.Color(255, 0, 0), pygame.Color(0, 0, 0, 255))
+blockable_mask = pygame.mask.from_threshold(background_color_map, pygame.Color(255, 0, 0), pygame.Color(15, 15, 15, 255))
 
 map_center = pygame.Vector2(
     background_color_map.get_width() / 2,
@@ -45,7 +48,7 @@ map_center = pygame.Vector2(
 )
 
 player = Player(
-    background_color_map,
+    blockable_mask,
     GameSprite("imgs", "New Piskel-1.png", width=PIXEL_UNIT_SIZE, height=PIXEL_UNIT_SIZE),
     pygame.FRect(100, 100, PIXEL_UNIT_SIZE-2, PIXEL_UNIT_SIZE-2),
     # pygame.Vector2(100, 100)
@@ -59,10 +62,10 @@ falling_object_hitbox = gs.rect.inflate(-2, -2)
 falling_object_hitbox.center = (100, 100)
 
 falling_object = Entity(
-    background_color_map,
+    blockable_mask,
     gs,
     falling_object_hitbox,
-    position = pygame.Vector2(random.randint(math.ceil(gs.rect.width), math.ceil(window.width-gs.rect.width)), 32),
+    position = pygame.Vector2(random.randint(math.ceil(gs.rect.width), math.ceil(window.width-gs.rect.width)), PIXEL_UNIT_SIZE),
     initial_velocity = pygame.Vector2(0,0),
     collision_type=Collision_Type.GHOST
 )
@@ -72,7 +75,7 @@ hb = gs2.rect.inflate(-10, -10)
 hb.center = (100, 100)
 
 obj = Entity(
-    background_color_map,
+    blockable_mask,
     gs2,
     hb,
     position = pygame.Vector2(200, 50),
@@ -115,6 +118,33 @@ camera_group = CameraGroup(
     player.sprite,
     screen=window
 )
+
+for image_name, count in tree_counts.items():
+    for _ in range(count):
+        tree_sprite = GameSprite(Helper.get_path("imgs", "sprites", "trees", image_name), width=PIXEL_UNIT_SIZE, height=PIXEL_UNIT_SIZE*2, scale_factor=2)
+        tree_hitbox = pygame.FRect(0, 0, 20, 30)
+
+        hitbox_shift = pygame.Vector2(0, (tree_sprite.rect.height - tree_hitbox.height)/2)
+
+        tree_mask = pygame.mask.Mask((int(tree_hitbox.width), int(tree_hitbox.height)), fill=True)
+
+        for _ in range(50):
+            spawn_pos = pygame.Vector2(
+                random.randint(PIXEL_UNIT_SIZE, int(map_center.x*2) - PIXEL_UNIT_SIZE),
+                random.randint(PIXEL_UNIT_SIZE*2, int(map_center.y*2) - PIXEL_UNIT_SIZE*2)
+            )
+            tree_hitbox.center = spawn_pos
+
+            point = (int(tree_hitbox.left), int(tree_hitbox.top))
+            invalid_spawn = blockable_mask.overlap(tree_mask, point) is not None
+
+            hits_entity = any(tree_hitbox.colliderect(e.hitbox) for e in entities)
+
+            if not invalid_spawn and not hits_entity:
+                tree = Entity(blockable_mask, tree_sprite, tree_hitbox, spawn_pos, pygame.Vector2(0, 0), Collision_Type.BLOCKABLE, hitbox_offset=hitbox_shift)
+                entities.append(tree)
+                camera_group.add(tree_sprite)
+                break
 
 half_w = window.get_size()[0] / 2 
 half_h = window.get_size()[1] / 2
