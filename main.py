@@ -2,7 +2,8 @@
 # repo example: https://github.com/PythonProgramming/pygame-tutorial-series
 # primer: https://realpython.com/pygame-a-primer/
 # camera: https://www.youtube.com/watch?v=u7LPRqrzry8
-# https://www.youtube.com/watch?v=8OMghdHP-zs
+# what i can do later: https://youtu.be/8OMghdHP-zs?t=18262
+# https://www.youtube.com/watch?v=MYaxPa_eZS0
 # + the docs and tutorials there
 
 # i didnt use some of these lmao
@@ -13,7 +14,11 @@
 
 # IDK WHAT THIS MEANS BUT IM GONNA MAKE EVERYTHING 32 x 32 pixels NO clue how this will work for the background but yk... whatever
 
+import os
+import sys
+
 import pygame
+
 import random
 import math
 
@@ -36,11 +41,23 @@ tree_counts = {
     "Trees-3.png": 5,
 }
 
+# Rumors of a Dungeon by human gazpacho is licensed under a Attribution 4.0 International License from Free Music Archive
+
+if getattr(sys, "frozen", False):
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 pygame.init()
+pygame.mixer.init()
+
 pygame.display.set_caption("Snake Gobble Game")
 window = pygame.display.set_mode((640, 360), pygame.SCALED) # AI helped me for this weird line because wtf even is a bit operator and or and xor is all ik (actually this is in unity too with collider restraints)
 # pygame.display.set_icon()
 assert window is not None
+
+pygame.mixer.music.load(Helper.get_path("music", "human gazpacho - Rumors of a Dungeon.mp3"))
+pygame.mixer.music.set_volume(0.5)
+
+pygame.mixer.music.play(-1)
 
 background_color_map = Helper.load_image(Helper.get_path("imgs", "background", "Background_color_map.png"), 2)
 blockable_mask = pygame.mask.from_threshold(background_color_map, pygame.Color(255, 0, 0), pygame.Color(15, 15, 15, 255))
